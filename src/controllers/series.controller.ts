@@ -39,11 +39,7 @@ export const getSeries = asyncHandler(async (req: Request, res: Response) => {
       })
     );
     
-    res.json({
-      success: true,
-      data: seriesWithOnlineRead,
-      count: seriesWithOnlineRead.length
-    });
+    res.json(seriesWithOnlineRead);
   } catch (error) {
     throw error;
   }
@@ -184,12 +180,7 @@ export const searchSeries = asyncHandler(async (req: Request, res: Response) => 
     })
   );
   
-  res.json({
-    success: true,
-    data: seriesWithOnlineRead,
-    count: seriesWithOnlineRead.length,
-    query: q.trim()
-  });
+  res.json(seriesWithOnlineRead);
 });
 
 export const incrementSeriesViews = asyncHandler(async (req: Request, res: Response) => {
@@ -254,10 +245,5 @@ export const getTopSeries = asyncHandler(async (req: Request, res: Response) => 
     })
   );
   
-  res.json({
-    success: true,
-    data: seriesWithOnlineRead,
-    count: seriesWithOnlineRead.length,
-    limit
-  });
+  res.json(seriesWithOnlineRead);
 });
