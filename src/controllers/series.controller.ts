@@ -71,11 +71,8 @@ export const getSeriesById = asyncHandler(async (req: Request, res: Response) =>
   }
   
   res.json({
-    success: true,
-    data: {
-      ...series.toObject(),
-      hasOnlineRead: hasOnlineComic
-    }
+    ...series.toObject(),
+    hasOnlineRead: hasOnlineComic
   });
 });
 

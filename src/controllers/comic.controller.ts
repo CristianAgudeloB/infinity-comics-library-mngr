@@ -23,11 +23,7 @@ export const getComics = asyncHandler(async (req: Request, res: Response) => {
   
   const comics = await query.exec();
   
-  res.json({
-    success: true,
-    data: comics,
-    count: comics.length
-  });
+  res.json(comics);
 });
 
 export const getComicById = asyncHandler(async (req: Request, res: Response) => {
@@ -41,10 +37,7 @@ export const getComicById = asyncHandler(async (req: Request, res: Response) => 
     });
   }
   
-  res.json({
-    success: true,
-    data: comic
-  });
+  res.json(comic);
 });
 
 export const getComicsBySeries = asyncHandler(async (req: Request, res: Response) => {
@@ -72,15 +65,7 @@ export const getComicsBySeries = asyncHandler(async (req: Request, res: Response
   
   const comics = await Comic.find({ seriesId }).sort({ createdAt: -1 });
   
-  res.json({
-    success: true,
-    data: comics,
-    count: comics.length,
-    series: {
-      id: series._id,
-      name: series.name
-    }
-  });
+  res.json(comics);
 });
 
 export const createComic = asyncHandler(async (req: Request, res: Response) => {
