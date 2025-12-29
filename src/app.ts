@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 
 import seriesRoutes from "./routes/series.routes";
 import comicRoutes from "./routes/comic.routes";
+import { errorHandler } from "./middleware/errorHandler";
 
 const app = express();
 
@@ -26,11 +27,44 @@ if (typeof mongoUri !== "string" || mongoUri.length === 0) {
 mongoose
   .connect(mongoUri)
   .then(() => console.log("MongoDB connected"))
-  .catch((err) => console.error(err));
+  .catch((err) => {
+    console.error("Error connecting to MongoDB:", err);
+    process.exit(1);
+  });
 
+// Manejo de errores de conexión de MongoDB
+mongoose.connection.on("error", (err) => {
+  console.error("MongoDB connection error:", err);
+});
+
+mongoose.connection.on("disconnected", () => {
+  console.warn("MongoDB disconnected");
+});
+
+// Rutas
 app.use("/api/series", seriesRoutes);
 app.use("/api/comics", comicRoutes);
+
 app.get("/", (_req, res) => {
-  res.send("API Infinity Comics funcionando");
+  res.json({
+    success: true,
+    message: "API Infinity Comics funcionando",
+    version: "1.0.0"
+  });
 });
+
+// Ruta para health check
+app.get("/health", (_req, res) => {
+  const mongoStatus = mongoose.connection.readyState === 1 ? "connected" : "disconnected";
+  res.json({
+    success: true,
+    status: "ok",
+    mongodb: mongoStatus,
+    timestamp: new Date().toISOString()
+  });
+});
+
+// Middleware de manejo de errores (debe ir al final, después de todas las rutas)
+app.use(errorHandler);
+
 export default app;
